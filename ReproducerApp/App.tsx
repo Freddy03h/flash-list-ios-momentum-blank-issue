@@ -5,32 +5,85 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StyleSheet, View, Text } from 'react-native';
+import { FlashList } from "@shopify/flash-list";
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const DATA = [
+  {
+    title: "A Section",
+    type: "section",
+  },
+  {
+    title: "1 Item",
+    type: "item",
+  },
+  {
+    title: "2 Item",
+    type: "item",
+  },
+  {
+    title: "B Section",
+    type: "section",
+  },
+  {
+    title: "3 Item",
+    type: "item",
+  },
+  {
+    title: "4 Item",
+    type: "item",
+  },
+  {
+    title: "5 Item",
+    type: "item",
+  },
+  {
+    title: "C Section",
+    type: "section",
+  },
+  {
+    title: "6 Item",
+    type: "item",
+  },
+  {
+    title: "7 Item",
+    type: "item",
+  },
+  {
+    title: "8 Item",
+    type: "item",
+  },
+];
 
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
+const stickyHeaderIndices = DATA.reduce((acc, item, i) => item.type === "section" ? [...acc, i] : acc, []);
+
+const renderItem = ({ item }) => {
+  switch (item.type) {
+    case "item":
+      return (
+        <View style={styles.cell}>
+          <Text>{item.title}</Text>
+        </View>
+      )
+    case "section":
+      return (
+        <View style={styles.section}>
+          <Text>{item.title}</Text>
+        </View>
+      )
+    default:
+      return null
+  }
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
+function App() {
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
+      <FlashList
+        data={DATA}
+        renderItem={renderItem}
+        stickyHeaderIndices={stickyHeaderIndices}
+        style={styles.list}
       />
     </View>
   );
@@ -39,6 +92,23 @@ function AppContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "red"
+  },
+  list: {
+    flex: 1,
+    backgroundColor: "blue"
+  },
+  section: {
+    height: 20,
+    backgroundColor: "pink",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  cell: {
+    height: 40,
+    backgroundColor: "yellow",
+    alignItems: "center",
+    justifyContent: "center"
   },
 });
 
